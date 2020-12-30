@@ -1,7 +1,7 @@
 package com.demo.config;
 
 import com.demo.web.filter.AuthFilter;
-import com.demo.web.filter.CorsFilter;
+import com.demo.web.filter.CustomCorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -35,8 +35,8 @@ public class Config implements WebMvcConfigurer {
 
     @Bean
     @Autowired
-    public FilterRegistrationBean corsFilter(CorsFilter filter) {
-        FilterRegistrationBean<CorsFilter> registration = new FilterRegistrationBean<>();
+    public FilterRegistrationBean corsFilter(CustomCorsFilter filter) {
+        FilterRegistrationBean<CustomCorsFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(filter);
         registration.addUrlPatterns("/*");
         registration.setName("authFilter");
