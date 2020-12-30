@@ -1,0 +1,40 @@
+version: '3.7'
+
+networks:
+  network:
+    driver: bridge
+
+
+volumes:
+  mysql-data-store:
+
+services:
+  store-service:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    env_file:
+      - local.env
+    volumes:
+      - /.m2:/home/username/.m2
+      - ./:/project/service/
+    ports:
+      - 8090:8080
+    networks:
+      - network
+
+  mysql:
+    build:
+      context: ./
+      dockerfile: Dockerfile.mysql
+    volumes:
+      - mysql-data-store:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=store_service
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    ports:
+      - 3336:3306
+    networks:
+      - network

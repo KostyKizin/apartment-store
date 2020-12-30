@@ -1,0 +1,150 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="1" author="Nadya">
+
+        <createTable tableName="user">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+
+            <column name="name" type="varchar(50)"/>
+
+            <column name="surname" type="varchar(50)"/>
+
+            <column name="email" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="password" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="telephone" type="int"/>
+
+            <column name="role" type="varchar(50)"/>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="2" author="Nadya">
+        <createTable tableName="country">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+
+            <column name="name" type="varchar(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="Nadya">
+        <createTable tableName="apartment">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+
+            <column name="number_of_rooms" type="int"/>
+
+            <column name="address" type="varchar(50)"/>
+
+            <column name="price" type="int"/>
+
+            <column name="country_id" type="bigint">
+                <constraints nullable="false"
+                             referencedTableName="country"
+                             referencedColumnNames="id"
+                             foreignKeyName="apartment_country_mapping_fk"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="Nadya">
+        <createTable tableName="deal">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+
+            <column name="date" type="date"/>
+
+            <column name="buyer_id" type="bigint">
+                <constraints nullable="false"
+                             referencedTableName="user"
+                             referencedColumnNames="id"
+                             foreignKeyName="deal_buyer_mapping_fk"/>
+            </column>
+
+            <column name="seller_id" type="bigint">
+                <constraints nullable="false"
+                             referencedTableName="user"
+                             referencedColumnNames="id"
+                             foreignKeyName="deal_seller_mapping_fk"/>
+            </column>
+
+            <column name="apartment_id" type="bigint">
+                <constraints nullable="false"
+                             referencedTableName="apartment"
+                             referencedColumnNames="id"
+                             foreignKeyName="deal_apartment_mapping_fk"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="5" author="Nadya">
+        <createTable tableName="review">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+
+            <column name="date" type="date"/>
+
+            <column name="text" type="varchar(255)"/>
+
+            <column name="author_id" type="bigint">
+                <constraints nullable="false"
+                             referencedTableName="user"
+                             referencedColumnNames="id"
+                             foreignKeyName="review_author_mapping_fk"/>
+            </column>
+
+            <column name="receiver_id" type="bigint">
+                <constraints nullable="false"
+                             referencedTableName="user"
+                             referencedColumnNames="id"
+                             foreignKeyName="review_receiver_mapping_fk"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="6" author="Nadya">
+        <addColumn tableName="deal">
+            <column name="status" type="varchar(20)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="7" author="Nadya">
+        <modifyDataType tableName="user" columnName="telephone" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="8" author="Nadya">
+        <addColumn tableName="apartment">
+            <column name="owner_id" type="bigint">
+                <constraints nullable="false"
+                             referencedTableName="user"
+                             referencedColumnNames="id"
+                             foreignKeyName="apartment_owner_mapping_fk"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="9" author="Nadya">
+        <dropForeignKeyConstraint baseTableName="deal" constraintName="deal_seller_mapping_fk"/>
+        <dropColumn tableName="deal" columnName="seller_id"/>
+    </changeSet>
+
+
+
+</databaseChangeLog>
