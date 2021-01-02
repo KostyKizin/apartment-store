@@ -146,5 +146,20 @@
     </changeSet>
 
 
+    <changeSet id="10" author="Nadya">
+        <insert tableName="country">
+            <column name="name" value="Russia"/>
+        </insert>
+        <insert tableName="country">
+            <column name="name" value="Germany"/>
+        </insert>
+        <insert tableName="country">
+            <column name="name" value="USA"/>
+        </insert>
+        <insert tableName="country">
+            <column name="name" value="Belgium"/>
+        </insert>
+    </changeSet>
+
 
 </databaseChangeLog>

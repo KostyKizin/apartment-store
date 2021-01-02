@@ -1,6 +1,7 @@
 package com.demo.entity.dto;
 
 import com.demo.entity.User;
+import com.demo.web.ApartmentOrderBy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
@@ -11,10 +12,9 @@ import org.springframework.data.domain.Sort;
 @Data
 public class ApartmentRequest {
     private User requestAuthor;
-    private String country;
-    private Integer price;
     private int page;
     private int size;
+    private ApartmentOrderBy orderBy;
     private Sort.Direction direction;
 
 
@@ -35,14 +35,10 @@ public class ApartmentRequest {
 
     @JsonIgnore
     private String getProperty() {
-        if (country != null) {
-            return "country.name";
-        } else if (price != null) {
-            return "price";
-        } else {
-            return null;
+        if (orderBy != null) {
+            return orderBy.getFieldName();
         }
-
+        return null;
     }
 
 

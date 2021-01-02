@@ -13,6 +13,7 @@ public class ApartmentDto {
     private String address;
     private int price;
     private String countryName;
+    private UserDto owner;
 
 
     public ApartmentDto(Apartment apartment) {
@@ -21,5 +22,6 @@ public class ApartmentDto {
         this.address = apartment.getAddress();
         this.price = apartment.getPrice();
         this.countryName = apartment.getCountry().getName();
+        this.owner = new UserDto(apartment.getOwner());
     }
 }

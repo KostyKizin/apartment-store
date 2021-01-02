@@ -4,7 +4,7 @@ import com.demo.entity.Apartment;
 import com.demo.entity.Country;
 import com.demo.entity.Status;
 import com.demo.entity.User;
-import com.demo.entity.dto.ApartmentDto;
+import com.demo.entity.dto.ApartmentCreateRequest;
 import com.demo.entity.dto.ApartmentRequest;
 import com.demo.repository.ApartmentRepository;
 import com.demo.repository.CountryRepository;
@@ -29,18 +29,21 @@ public class ApartmentService {
         return new ApartmentPageResponse(page);
     }
 
-    public Apartment create(ApartmentDto dto, User requestAuthor) {
-        if (dto.getId() != null) {
-            if (repository.existsByAddressAndCountry(dto.getAddress(), getCountry(dto.getCountryName()))) {
-                throw new ServiceException(String.format("Apartment by address %s and country %s already exists", dto.getAddress(), dto.getCountryName()));
-            }
+    public Apartment create(ApartmentCreateRequest request, User requestAuthor) {
+        if (request.getId() != null) {
+            Apartment apartment = repository.findByIdAndOwner(request.getId(), requestAuthor)
+                    .orElseThrow(() -> new ServiceException(String.format("Apartment did not found id %s", request.getId())));
+            this.update(apartment, request);
+            return repository.save(apartment);
+        } else {
+            Apartment apartment = this.map(request, requestAuthor);
+            return repository.save(apartment);
         }
-        return repository.save(this.map(dto, requestAuthor));
     }
 
 
-    public void delete(Long id) {
-        Apartment apartment = repository.findById(id).orElse(null);
+    public void delete(Long id, User requestAuthor) {
+        Apartment apartment = repository.findByIdAndOwner(id, requestAuthor).orElse(null);
         if (apartment != null) {
             if (hasDeals(apartment)) {
                 throw new ServiceException("Can't delete apartment! There are deals using the apartment!");
@@ -48,9 +51,7 @@ public class ApartmentService {
                 repository.delete(apartment);
             }
         }
-
     }
-
 
     public Apartment getById(Long id) {
         return repository.findById(id)
@@ -63,23 +64,40 @@ public class ApartmentService {
 
     private boolean existsActiveDeals(Apartment apartment) {
         Set<Status> activeStatuses = Set.of(Status.DONE, Status.IN_PROGRESS);
-        return dealRepository.findAllByApartment(apartment).stream().anyMatch(deal -> activeStatuses.contains(deal.getStatus()));
+        return dealRepository.findAllByApartment(apartment)
+                .stream()
+                .anyMatch(deal -> activeStatuses.contains(deal.getStatus()));
     }
 
-    private Country getCountry(String name) {
-        return countryRepository.findByName(name)
-                .orElseThrow(() -> new ServiceException(String.format("Can't find country by name %s", name)));
+    private Apartment map(ApartmentCreateRequest request, User user) {
+        Apartment apartment = new Apartment();
+        apartment.setOwner(user);
+        this.update(apartment, request);
+        return apartment;
     }
 
 
-    private Apartment map(ApartmentDto dto, User user) {
-        return Apartment.builder()
-                .address(dto.getAddress())
-                .numberOfRooms(dto.getNumberOfRooms())
-                .price(dto.getPrice())
-                .owner(user)
-                .id(dto.getId())
-                .country(getCountry(dto.getCountryName()))
-                .build();
+    private void update(Apartment apartment, ApartmentCreateRequest request) {
+
+        if (request.getAddress() != null) {
+            apartment.setAddress(request.getAddress());
+        }
+
+        if (request.getCountryId() != null) {
+            Country country = this.getCountry(request.getCountryId());
+            apartment.setCountry(country);
+        }
+
+        if (request.getPrice() > 0) {
+            request.setPrice(request.getPrice());
+        }
+
+        if (request.getNumberOfRooms() > 0) {
+            apartment.setNumberOfRooms(request.getNumberOfRooms());
+        }
+    }
+
+    private Country getCountry(Long countryId) {
+        return countryRepository.findById(countryId).orElseThrow(() -> new ServiceException(String.format("Country not found, %s", countryId)));
     }
 }

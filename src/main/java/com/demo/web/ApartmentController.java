@@ -1,6 +1,7 @@
 package com.demo.web;
 
 import com.demo.entity.User;
+import com.demo.entity.dto.ApartmentCreateRequest;
 import com.demo.entity.dto.ApartmentDto;
 import com.demo.entity.dto.ApartmentRequest;
 import com.demo.service.ApartmentService;
@@ -25,17 +26,15 @@ public class ApartmentController {
     @GetMapping("/apartment/all")
     public ApartmentPageResponse getAll(
             @SessionAttribute(name = "user") User requestAuthor,
-            @RequestParam(value = "country", required = false) String country,
-            @RequestParam(value = "price", required = false) Integer price,
+            @RequestParam(value = "orderBy", required = false) ApartmentOrderBy orderBy,
             @RequestParam(value = "direction", required = false) Sort.Direction direction,
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
 
         final ApartmentRequest request = ApartmentRequest.builder()
-                .country(country)
                 .direction(direction)
-                .price(price)
                 .page(page)
+                .orderBy(orderBy)
                 .size(size)
                 .requestAuthor(requestAuthor)
                 .build();
@@ -45,15 +44,15 @@ public class ApartmentController {
 
     @PostMapping("/apartment")
     public ApartmentDto create(@SessionAttribute(name = "user") User requestAuthor,
-                               @RequestBody ApartmentDto dto) {
-        return new ApartmentDto(service.create(dto, requestAuthor));
+                               @RequestBody ApartmentCreateRequest request) {
+        return new ApartmentDto(service.create(request, requestAuthor));
     }
 
     @DeleteMapping("/apartment/{id}")
-    public HttpStatus delete(@PathVariable Long id) {
-        service.delete(id);
+    public HttpStatus delete(@PathVariable Long id,
+                             @SessionAttribute(name = "user") User requestAuthor) {
+        service.delete(id, requestAuthor);
         return HttpStatus.OK;
     }
-
 
 }

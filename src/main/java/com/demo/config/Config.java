@@ -39,7 +39,7 @@ public class Config implements WebMvcConfigurer {
         FilterRegistrationBean<CustomCorsFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(filter);
         registration.addUrlPatterns("/*");
-        registration.setName("authFilter");
+        registration.setName("corsFilter");
         registration.setOrder(1);
         return registration;
 
