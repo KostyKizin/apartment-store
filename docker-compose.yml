@@ -16,7 +16,6 @@ services:
     env_file:
       - local.env
     volumes:
-      - /.m2:/home/username/.m2
       - ./:/project/service/
     ports:
       - 8090:8080
