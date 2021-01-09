@@ -21,5 +21,6 @@ public class UserDto {
         this.sureName = user.getSurname();
         this.userRole = user.getRole();
         this.email = user.getEmail();
+        this.telephoneNumber = user.getTelephone();
     }
 }

@@ -89,7 +89,7 @@ public class ApartmentService {
         }
 
         if (request.getPrice() > 0) {
-            request.setPrice(request.getPrice());
+            apartment.setPrice(request.getPrice());
         }
 
         if (request.getNumberOfRooms() > 0) {
