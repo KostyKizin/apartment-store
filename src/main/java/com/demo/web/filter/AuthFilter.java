@@ -57,7 +57,8 @@ public class AuthFilter extends OncePerRequestFilter {
                 || requestURI.startsWith("/user/login")
                 || requestURI.startsWith("/user/logout")
                 || requestURI.startsWith("/user/register")
-                || requestURI.equals("/");
+                || requestURI.equals("/")
+                || "OPTIONS".equals(request.getMethod());
     }
 
 
