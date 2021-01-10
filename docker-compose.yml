@@ -18,7 +18,7 @@ services:
     volumes:
       - ./:/project/service/
     ports:
-      - 8090:8080
+      - 8090:8081
     networks:
       - network
 
