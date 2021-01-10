@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
 @EnableWebMvc
@@ -33,7 +34,7 @@ public class Config implements WebMvcConfigurer {
     }
 
 
-    @Bean
+/*    @Bean
     @Autowired
     public FilterRegistrationBean corsFilter(CustomCorsFilter filter) {
         FilterRegistrationBean<CustomCorsFilter> registration = new FilterRegistrationBean<>();
@@ -43,6 +44,18 @@ public class Config implements WebMvcConfigurer {
         registration.setOrder(1);
         return registration;
 
+    }*/
+
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
+            }
+        };
     }
 
 
