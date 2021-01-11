@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 public class DealViewDto {
+    private Long id;
     private ApartmentDto apartmentDto;
     private UserDto seller;
     private UserDto buyer;
@@ -22,5 +23,6 @@ public class DealViewDto {
         this.buyer = new UserDto(deal.getBuyer());
         this.status = deal.getStatus();
         this.date = deal.getDate();
+        this.id = deal.getId();
     }
 }
