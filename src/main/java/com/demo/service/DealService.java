@@ -67,7 +67,7 @@ public class DealService {
     }
 
     private boolean existsActiveDeals(Apartment apartment) {
-        Set<Status> activeStatuses = Set.of(Status.DONE, Status.IN_PROGRESS);
+        Set<Status> activeStatuses = Set.of(Status.DONE);
         return dealRepository.findAllByApartment(apartment).stream().anyMatch(deal -> activeStatuses.contains(deal.getStatus()));
     }
 
