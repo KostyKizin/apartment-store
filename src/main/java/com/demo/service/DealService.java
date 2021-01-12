@@ -28,6 +28,14 @@ public class DealService {
             throw new ServiceException("The apartment is part of deal");
         }
 
+        Optional<Deal> existingDeal = dealRepository.findByIdAndBuyer(apartment.getId(), requestAuthor);
+        if (existingDeal.isPresent()) {
+            Deal deal = existingDeal.get();
+            deal.setStatus(Status.IN_PROGRESS);
+            dealRepository.save(deal);
+            return deal;
+        }
+
         return dealRepository.save(Deal.builder()
                 .apartment(apartment)
                 .buyer(requestAuthor)

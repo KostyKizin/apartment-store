@@ -13,6 +13,6 @@ public interface ApartmentRepository extends PagingAndSortingRepository<Apartmen
 
     Optional<Apartment> findByIdAndOwner(Long id, User owner);
 
-    @Query("select a from Apartment a left join Deal d on d.apartment = a where d is null or d.status in ('IN_PROGRESS')")
+    @Query("select distinct a from Apartment a left join Deal d on d.apartment = a where d is null or d.status in ('IN_PROGRESS', 'CANCELED')")
     Page<Apartment> findAllForResponse(Pageable pageable);
 }
