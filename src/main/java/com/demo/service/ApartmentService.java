@@ -25,7 +25,7 @@ public class ApartmentService {
     private final DealRepository dealRepository;
 
     public ApartmentPageResponse findAll(ApartmentRequest request) {
-        Page<Apartment> page = repository.findAllByDealsIsNull(request.getPageRequest());
+        Page<Apartment> page = repository.findAllForResponse(request.getPageRequest());
         return new ApartmentPageResponse(page);
     }
 

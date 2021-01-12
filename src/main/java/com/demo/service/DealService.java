@@ -37,10 +37,10 @@ public class DealService {
 
     }
 
-    public void cancel(Long id, User user) {
+    public void updateStatus(Long id, User user, Status status) {
         Deal deal = this.getDeal(id, user)
                 .orElseThrow(() -> new ServiceException(String.format("Can't find deal by id %s and user role  %s", id, user.getRole())));
-        deal.setStatus(Status.CANCELED);
+        deal.setStatus(status);
         dealRepository.save(deal);
     }
 

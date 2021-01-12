@@ -36,10 +36,11 @@ public class DealController {
 
     }
 
-    @PutMapping("/deal/cancel/{id}")
+    @PutMapping("/deal/status/{id}/{status}")
     public HttpStatus cancel(@SessionAttribute(name = "user") User requestAuthor,
+                             @PathVariable Status status,
                              @PathVariable Long id) {
-        dealService.cancel(id, requestAuthor);
+        dealService.updateStatus(id, requestAuthor, status);
         return HttpStatus.OK;
     }
 
